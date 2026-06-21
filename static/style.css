@@ -1,0 +1,157 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f6;
+    padding: 40px;
+    text-align: center;
+}
+
+.converter-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.box-wrapper {
+    text-align: left;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    resize: none;
+}
+
+#swapBtn, button[type="submit"] {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    border: 1px solid #007bff;
+}
+
+#swapBtn {
+    background-color: white;
+    color: #007bff;
+}
+
+button[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    margin-top: 20px;
+}
+
+/* Utility class to cleanly hide elements */
+.hidden {
+    display: none !important;
+}
+
+
+/* Container to hold both the samples panel and the translation grid side-by-side */
+.main-layout-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 1000px;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+/* Compact side panel for your Morse snippets */
+.samples-side-panel {
+    background-color: white;
+    border: 2px solid #007bff;
+    border-radius: 6px;
+    padding: 15px;
+    width: 180px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    text-align: left;
+}
+
+.samples-side-panel h3 {
+    margin-top: 0;
+    font-size: 16px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+/* Styled clickable buttons inside the sample drawer */
+.sample-item-btn {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Keeps text clean if it runs long */
+    transition: background 0.2s;
+}
+
+.sample-item-btn:hover {
+    background: #e2e6ea;
+    border-color: #007bff;
+}
+
+/* Ensure the main text engine takes up the remaining horizontal workspace */
+.converter-container {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 800px;
+}
+
+/* Keeping utility hidden rule clean */
+.hidden {
+    display: none !important;
+}
+
+
+
+/* Container to keep the tiny toggle button and h1 title aligned on the same horizontal line */
+.title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+/* Tiny, subtle swap button for the title */
+#titleSwapBtn {
+    background: none;
+    border: 1px solid #ccc;
+    color: #666;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#titleSwapBtn:hover {
+    background-color: #e2e6ea;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+/* Base style adjustment for the title itself */
+#mainTitle {
+    margin: 0;
+    font-size: 28px;
+    letter-spacing: 2px;
+}
