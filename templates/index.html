@@ -8,54 +8,82 @@
 </head>
 <body>
     <div class="title-container">
-    <button type="button" id="titleSwapBtn" title="Toggle Title Language">⇆</button>
-    <h1 id="mainTitle">-- --- .-. ... . -.-. --- -.. . .-.</h1>
-</div>
+        <button type="button" id="titleSwapBtn" title="Toggle Title Language">⇆</button>
+        <h1 id="mainTitle">-- --- .-. ... . -.-. --- -.. . .-.</h1>
+    </div>
 
     <form action="/" method="POST">
-        <div class="control-header">
-            <input type="hidden" name="mode" id="modeStatus" value="encode">
-            <button type="button" id="swapBtn">⇆ Switch: Text to Morse</button>
+        <div class="control-header" style="display: flex; gap: 15px; align-items: center; justify-content: space-between; background: #f8fafc; padding: 10px 15px; border-radius: 6px; border: 1px solid #e2e8f0;">
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="hidden" name="mode" id="modeStatus" value="encode">
+                <button type="button" id="swapBtn" style="padding: 6px 12px; font-weight: 600;">⇆ Switch: Text to Morse</button>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="secretKeyInput" style="font-size: 13px; font-weight: 600; color: #475569;">🔑 Secret Key (Optional):</label>
+                <input type="password" id="secretKeyInput" name="secret_key" placeholder="e.g. PHOENIX" style="padding: 5px 10px; border-radius: 4px; border: 1px solid #cbd5e1; font-size: 13px; text-transform: uppercase; width: 150px;">
+            </div>
         </div>
         <br>
 
         <div class="main-layout-wrapper">
             
             <div id="samplePhrasesContainer" class="samples-side-panel hidden">
-    <h3>💡 Samples</h3>
-    <select id="panelDropdown" style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid #ddd; font-size: 13px; cursor: pointer; margin-bottom: 15px;">
-        <option value="" selected disabled>-- Select Code --</option>
-        <option value="... --- ...">... --- ... (SOS)</option>
-        <option value=".... . .-.. .-.. ---">.... . .-.. .-.. --- (HELLO)</option>
-        <option value="- . ... - .. -. --. / .---- / ..--- / ...--">TESTING 1 2 3</option>
-        <option value="-.-. --- --- .-.. / .-- . -... / .- .--. .--.">COOL WEB APP</option>
-    </select>
+                <h3>💡 Samples</h3>
+                <select id="panelDropdown" style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid #ddd; font-size: 13px; cursor: pointer; margin-bottom: 15px;">
+                    <option value="" selected disabled>-- Select Code --</option>
+                    <option value="... --- ...">... --- ... (SOS)</option>
+                    <option value=".... . .-.. .-.. ---">.... . .-.. .-.. --- (HELLO)</option>
+                    <option value="- . ... - .. -. --. / .---- / ..--- / ...--">TESTING 1 2 3</option>
+                    <option value="-.-. --- --- .-.. / .-- . -... / .- .--. .--.">COOL WEB APP</option>
+                </select>
 
-    <h3>🌐 Language</h3>
-    <select name="target_lang" id="targetLangDropdown" style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid #ddd; font-size: 13px; cursor: pointer;">
-        <option value="english" selected>English</option>
-        <option value="hindi">Hindi (हिन्दी)</option>
-        <option value="telugu">Telugu (తెలుగు)</option>
-        <option value="spanish">Spanish (Español)</option>
-        <option value="french">French (Français)</option>
-        <option value="german">German (Deutsch)</option>
-    </select>
-</div>
+                <h3>🌐 Language</h3>
+                <select name="target_lang" id="targetLangDropdown" style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid #ddd; font-size: 13px; cursor: pointer;">
+                    <option value="english" selected>English</option>
+                    <option value="hindi">Hindi (हिन्दी)</option>
+                    <option value="telugu">Telugu (తెలుగు)</option>
+                    <option value="spanish">Spanish (Español)</option>
+                    <option value="french">French (Français)</option>
+                    <option value="german">German (Deutsch)</option>
+                </select>
+            </div>
 
             <div class="converter-container">
                 <div class="box-wrapper">
-                    <label id="inputLabel" for="user_input">English Text Input:</label><br>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label id="inputLabel" for="user_input">English Text Input:</label>
+                        <button type="button" id="micBtn" style="padding: 2px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid #28a745; background: white; color: #28a745;">🎤 Speak</button>
+                    </div>
+                    <br>
                     <textarea name="user_input" id="user_input" placeholder="Type here...">{{ user_input }}</textarea>
                 </div>
 
                 <div class="box-wrapper">
-                    <label id="outputLabel" for="output_result">Morse Code Output:</label><br>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label id="outputLabel" for="output_result">Morse Code Output:</label>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div id="visualBeacon" style="width: 12px; height: 12px; border-radius: 50%; background-color: #cbd5e1; transition: background-color 0.05s ease;"></div>
+                            <button type="button" id="smartAudioBtn" style="padding: 2px 8px; font-size: 12px; cursor: pointer; border-radius: 4px; border: 1px solid #007bff; background: white; color: #007bff;">🔊 Listen</button>
+                        </div>
+                    </div>
+                    <br>
                     <textarea id="output_result" readonly placeholder="Translation will appear here...">{{ result }}</textarea>
                 </div>
             </div>
 
         </div>
     </form>
+
+    <div class="history-section-wrapper">
+        <div class="history-header">
+            <h2>📜 Local Translation History</h2>   
+            <button type="button" id="clearHistoryBtn" class="clear-btn">🗑️ Clear Logs</button>
+        </div>
+        <div id="historyLogContainer" class="history-log-container">
+            <p class="empty-log-msg">No recent translations logged on this device.</p>
+        </div>
+    </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
