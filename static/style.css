@@ -249,3 +249,56 @@ button[type="submit"] {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+
+
+
+
+/* =========================================================================
+   MOBILE RESPONSIVE ADAPTATION LAYER
+   ========================================================================= */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 15px 10px !important;
+    }
+
+    /* Stack the sidebar and the core layout vertically */
+    .main-layout-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    /* Stretch the side drawer snippet elements to fill full width */
+    .samples-side-panel {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    /* Collapse the split grid from 2 columns into 1 vertical column */
+    .converter-container {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+    }
+
+    /* Force text boxes to be slightly shorter so the user doesn't have to scroll forever */
+    textarea {
+        height: 120px;
+    }
+
+    /* Clean up the network control bars to stack cleanly on mobile rows */
+    .control-header {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: 12px;
+    }
+
+    .control-header div {
+        justify-content: space-between;
+        width: 100%;
+    }
+
+    .title-container h1 {
+        font-size: 20px !important;
+    }
+}
