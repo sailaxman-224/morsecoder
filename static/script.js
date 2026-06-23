@@ -16,18 +16,102 @@ const micBtn = document.getElementById('micBtn');
 const historyLogContainer = document.getElementById('historyLogContainer');
 const clearHistoryBtn = document.getElementById('clearHistoryBtn');
 
+// New Network DOM References
+const transmitBtn = document.getElementById('transmitBtn');
+const channelInput = document.getElementById('channelInput');
+const connectNetBtn = document.getElementById('connectNetBtn');
+const netStatus = document.getElementById('netStatus');
+
 // =========================================================================
-// 2. GLOBAL TIMING & AUDIO TRACKING ENGINE STATE
+// 2. GLOBAL TIMING, NETWORKING & AUDIO TRACKING ENGINE STATE
 // =========================================================================
 let activeAudioCtx = null;
 let activeOscillators = [];
 let activeSpeechUtterance = null;
 let saveDebounceTimeout = null;
+let socket = null; // WebSocket link descriptor
 
-// Load any previously saved browser history items immediately when page boots up
 document.addEventListener('DOMContentLoaded', renderHistory);
 
-/// =========================================================================
+// =========================================================================
+// SOCKET.IO TACTICAL REAL-TIME CLIENT SIGNALLING LAYER
+// =========================================================================
+if (connectNetBtn) {
+    connectNetBtn.addEventListener('click', () => {
+        if (socket && socket.connected) {
+            socket.disconnect();
+            return;
+        }
+
+        // Establish real-time connection to the local backend WebSocket service
+        socket = io("http://127.0.0.1:5000");
+
+        socket.on('connect', () => {
+            netStatus.innerHTML = 'Connected';
+            netStatus.style.color = '#28a745';
+            connectNetBtn.innerHTML = 'Disconnect';
+            connectNetBtn.style.backgroundColor = '#dc3545';
+            
+            // Immediately tune into the selected channel room frequency
+            const targetChannel = channelInput ? channelInput.value : '101';
+            socket.emit('join_channel', { channel: targetChannel });
+            
+            // Show transmission capabilities if we are in text encoding mode
+            if (modeStatus.value === 'encode') transmitBtn.classList.remove('hidden');
+        });
+
+        socket.on('disconnect', () => {
+            netStatus.innerHTML = 'Offline';
+            netStatus.style.color = '#ef4444';
+            connectNetBtn.innerHTML = 'Connect';
+            connectNetBtn.style.backgroundColor = '#3b82f6';
+            transmitBtn.classList.add('hidden');
+        });
+
+        // CRITICAL: Handle Incoming Real-Time Broadcast Signals from Other Nodes!
+        socket.on('incoming_signal', (data) => {
+            // Only capture and decode signals if we are currently in Decode Mode
+            if (modeStatus.value === 'decode') {
+                stopAllAudio();
+                const receivedMorse = data.morse_payload;
+                userInput.value = receivedMorse;
+                
+                // Fire translation pipeline to auto-decrypt if a key is preset
+                triggerTranslation();
+                
+                // Automated execution sequence: Pulse visual beacon light and stream audio waves immediately
+                setTimeout(() => {
+                    playMorseWaves(receivedMorse);
+                }, 200);
+            }
+        });
+    });
+}
+
+// Transmission Event Trigger Handler
+if (transmitBtn) {
+    transmitBtn.addEventListener('click', () => {
+        const payload = outputResult.value;
+        if (!payload.trim() || !socket || !socket.connected) return;
+
+        const targetChannel = channelInput ? channelInput.value : '101';
+        
+        // Push the Morse packet up the server pipeline to split to the cluster channel
+        socket.emit('transmit_signal', {
+            channel: targetChannel,
+            morse_payload: payload
+        });
+
+        transmitBtn.innerHTML = '⚡ Transmitted!';
+        transmitBtn.style.backgroundColor = '#28a745';
+        setTimeout(() => {
+            transmitBtn.innerHTML = '🛰️ Transmit Signal';
+            transmitBtn.style.backgroundColor = '#ef4444';
+        }, 1200);
+    });
+}
+
+// =========================================================================
 // 3. DYNAMIC WORKSPACE UI TOGGLE SWAP
 // =========================================================================
 swapBtn.addEventListener('click', () => {
@@ -40,6 +124,7 @@ swapBtn.addEventListener('click', () => {
         outputLabel.innerHTML = 'English Text Output:';
         userInput.placeholder = 'Type Morse code here (e.g., .... . -.--)...';
         samplePhrasesContainer.classList.remove('hidden');
+        transmitBtn.classList.add('hidden'); // Receiver doesn't transmit
     } else {
         modeStatus.value = 'encode';
         swapBtn.innerHTML = '⇆ Switch: Text to Morse';
@@ -47,19 +132,14 @@ swapBtn.addEventListener('click', () => {
         outputLabel.innerHTML = 'Morse Code Output:';
         userInput.placeholder = 'Type English text here...';
         samplePhrasesContainer.classList.add('hidden');
+        if (socket && socket.connected) transmitBtn.classList.remove('hidden');
     }
-    
-    // Clear the workspaces completely
     userInput.value = '';
     outputResult.value = '';
-    
-    // --- FIX: Instantly flush the cryptographic key variable out of the DOM ---
-    if (secretKeyInput) {
-        secretKeyInput.value = '';
-    }
-    
-    stopAllAudio(); // Clear hanging frequencies if mode flips mid-stream
+    if (secretKeyInput) secretKeyInput.value = '';
+    stopAllAudio();
 });
+
 // =========================================================================
 // 4. REAL-TIME ASYNCHRONOUS TRANSLATION PIPELINE (AJAX FETCH)
 // =========================================================================
@@ -73,7 +153,6 @@ function triggerTranslation() {
         return;
     }
 
-    // Securely fallback to an empty string if element is not rendering properly
     const keyValue = secretKeyInput ? secretKeyInput.value : '';
 
     fetch('/api/translate', {
@@ -90,7 +169,6 @@ function triggerTranslation() {
     .then(translation => { 
         outputResult.value = translation; 
         
-        // DEBOUNCE LOGGER: Clear previous timer and trigger save 1.5s after user stops typing
         clearTimeout(saveDebounceTimeout);
         saveDebounceTimeout = setTimeout(() => {
             saveToLocalStorage(textValue, translation, modeStatus.value, targetLangDropdown ? targetLangDropdown.value : 'english');
@@ -99,18 +177,12 @@ function triggerTranslation() {
     .catch(error => console.error('API Translation System Error:', error));
 }
 
-// Attach translation triggers to user typing input changes
 userInput.addEventListener('input', triggerTranslation);
-
-if (document.getElementById('targetLangDropdown')) {
-    document.getElementById('targetLangDropdown').addEventListener('change', triggerTranslation);
-}
-if (document.getElementById('secretKeyInput')) {
-    document.getElementById('secretKeyInput').addEventListener('input', triggerTranslation);
-}
+if (document.getElementById('targetLangDropdown')) document.getElementById('targetLangDropdown').addEventListener('change', triggerTranslation);
+if (document.getElementById('secretKeyInput')) document.getElementById('secretKeyInput').addEventListener('input', triggerTranslation);
 
 // =========================================================================
-// 5. AUTOFILL SELECTORS & CUSTOM TITLES LOGIC
+// 5. AUTOFILL SELECTORS, TITLES LOGIC & CLIPBOARD COPY
 // =========================================================================
 if (panelDropdown) {
     panelDropdown.addEventListener('change', () => {
@@ -133,37 +205,23 @@ if (titleSwapBtn && mainTitle) {
     });
 }
 
-// =========================================================================
-// CLIPBOARD COPY INFRASTRUCTURE
-// =========================================================================
 const copyBtn = document.getElementById('copyBtn');
-
 if (copyBtn) {
     copyBtn.addEventListener('click', () => {
         const textToCopy = outputResult.value;
-        
-        // Block actions if the target payload workspace is completely empty
         if (!textToCopy.trim()) return;
-
-        navigator.clipboard.writeText(textToCopy)
-            .then(() => {
-                // UI feedback signaling successful data execution
-                copyBtn.innerHTML = '✓ Copied!';
-                copyBtn.style.borderColor = '#28a745';
-                copyBtn.style.color = '#28a745';
-
-                // Revert look back to baseline standard options after a 1.2s delay frame
-                setTimeout(() => {
-                    copyBtn.innerHTML = '📋 Copy';
-                    copyBtn.style.borderColor = '#6c757d';
-                    copyBtn.style.color = '#6c757d';
-                }, 1200);
-            })
-            .catch(err => {
-                console.error('Clipboard pipeline execution failure:', err);
-            });
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            copyBtn.innerHTML = '✓ Copied!';
+            copyBtn.style.borderColor = '#28a745';
+            copyBtn.style.color = '#28a745';
+            setTimeout(() => {
+                copyBtn.innerHTML = '📋 Copy';
+                copyBtn.style.borderColor = '#6c757d';
+                copyBtn.style.color = '#6c757d';
+            }, 1200);
+        });
     });
-}   
+}
 
 // =========================================================================
 // 6. LOCAL DEVICE DATA STORAGE RESIDENCY MANAGEMENT (HISTORY LOG)
@@ -171,8 +229,6 @@ if (copyBtn) {
 function saveToLocalStorage(input, output, mode, lang) {
     if (!input.trim() || !output.trim()) return;
     let history = JSON.parse(localStorage.getItem('morse_history')) || [];
-    
-    // Prevent recording duplications if user is sitting idling on single string
     if (history.length > 0 && history[0].input === input && history[0].output === output) return;
 
     const logEntry = {
@@ -181,10 +237,8 @@ function saveToLocalStorage(input, output, mode, lang) {
         mode: mode === 'encode' ? 'Text ➔ Morse' : 'Morse ➔ Text',
         lang: lang.toUpperCase()
     };
-    
-    history.unshift(logEntry); // Pin fresh log to top of index
-    if (history.length > 10) history.pop(); // Keep index depth limited to 10 nodes max
-    
+    history.unshift(logEntry);
+    if (history.length > 10) history.pop();
     localStorage.setItem('morse_history', JSON.stringify(history));
     renderHistory();
 }
@@ -214,7 +268,6 @@ clearHistoryBtn.addEventListener('click', () => {
 // =========================================================================
 if (smartAudioBtn) {
     smartAudioBtn.addEventListener('click', () => {
-        // KILL SWITCH: If sound or speech is actively processing, clear it instantly
         if ((activeAudioCtx && activeAudioCtx.state !== 'closed') || (window.speechSynthesis && window.speechSynthesis.speaking)) {
             stopAllAudio();
             return;
@@ -266,11 +319,9 @@ function playMorseWaves(morseCode) {
             oscillator.stop(currentTime + duration + 0.01);
             activeOscillators.push(oscillator);
 
-            // Compute precision latency window based on Audio card scheduler timeline
             const delayStartMs = (currentTime - activeAudioCtx.currentTime) * 1000;
             const delayStopMs = (currentTime + duration - activeAudioCtx.currentTime) * 1000;
 
-            // Trigger light indicators instantly via engine time frames
             setTimeout(() => { if (activeAudioCtx && beacon) beacon.style.setProperty('background-color', '#fbbf24', 'important'); }, delayStartMs);
             setTimeout(() => { if (beacon) beacon.style.setProperty('background-color', '#cbd5e1', 'important'); }, delayStopMs);
 
@@ -331,10 +382,9 @@ function stopAllAudio() {
 }
 
 // =========================================================================
-// 8. VOICE DICTATION INTEGRATION CAPTURE MODULE (MICROPHONE FEEDSTREAMS)
+// 8. VOICE DICTATION INTEGRATION CAPTURE MODULE
 // =========================================================================
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
 if (SpeechRecognition && micBtn) {
     const recognition = new SpeechRecognition();
     recognition.continuous = false;
@@ -359,7 +409,7 @@ if (SpeechRecognition && micBtn) {
 
     recognition.onresult = (event) => {
         userInput.value = event.results[0][0].transcript;
-        userInput.dispatchEvent(new Event('input')); // Instant trigger real-time encryption/translation sequence
+        userInput.dispatchEvent(new Event('input'));
     };
 
     recognition.onend = () => {
