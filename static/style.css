@@ -3,14 +3,15 @@ body {
     background-color: #f4f7f6;
     padding: 40px;
     text-align: center;
+    margin: 0;
 }
 
 .converter-container {
+    flex-grow: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     max-width: 800px;
-    margin: 0 auto;
 }
 
 .box-wrapper {
@@ -28,31 +29,21 @@ textarea {
     resize: none;
 }
 
-#swapBtn, button[type="submit"] {
+#swapBtn {
     padding: 10px 20px;
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
     border-radius: 4px;
     border: 1px solid #007bff;
-}
-
-#swapBtn {
     background-color: white;
     color: #007bff;
-}
-
-button[type="submit"] {
-    background-color: #007bff;
-    color: white;
-    margin-top: 20px;
 }
 
 /* Utility class to cleanly hide elements */
 .hidden {
     display: none !important;
 }
-
 
 /* Container to hold both the samples panel and the translation grid side-by-side */
 .main-layout-wrapper {
@@ -67,60 +58,24 @@ button[type="submit"] {
 /* Compact side panel for your Morse snippets */
 .samples-side-panel {
     background-color: white;
-    border: 2px solid #007bff;
-    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
     padding: 15px;
-    width: 180px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    width: 200px;
+    box-shadow: none;
     text-align: left;
+    box-sizing: border-box;
 }
 
 .samples-side-panel h3 {
     margin-top: 0;
-    font-size: 16px;
-    color: #333;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
     border-bottom: 1px solid #eee;
     padding-bottom: 8px;
 }
-
-/* Styled clickable buttons inside the sample drawer */
-.sample-item-btn {
-    display: block;
-    width: 100%;
-    padding: 8px;
-    margin: 8px 0;
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 13px;
-    cursor: pointer;
-    text-align: left;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; /* Keeps text clean if it runs long */
-    transition: background 0.2s;
-}
-
-.sample-item-btn:hover {
-    background: #e2e6ea;
-    border-color: #007bff;
-}
-
-/* Ensure the main text engine takes up the remaining horizontal workspace */
-.converter-container {
-    flex-grow: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    max-width: 800px;
-}
-
-/* Keeping utility hidden rule clean */
-.hidden {
-    display: none !important;
-}
-
-
 
 /* Container to keep the tiny toggle button and h1 title aligned on the same horizontal line */
 .title-container {
@@ -155,7 +110,6 @@ button[type="submit"] {
     font-size: 28px;
     letter-spacing: 2px;
 }
-
 
 /* History Component Layout */
 .history-section-wrapper {
@@ -249,10 +203,6 @@ button[type="submit"] {
     from { opacity: 0; transform: translateY(5px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
-
-
-
 
 /* =========================================================================
    MOBILE RESPONSIVE ADAPTATION LAYER

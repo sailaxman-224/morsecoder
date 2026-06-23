@@ -1,3 +1,9 @@
+# =========================================================================
+# CRITICAL COMPATIBILITY HOOKS: MUST SIT AT ABSOLUTE LINES 1 & 2
+# =========================================================================
+from gevent import monkey
+monkey.patch_all()
+
 import os
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO, join_room, emit
@@ -30,6 +36,7 @@ def vigenere_encrypt(plaintext, key):
             ciphertext.append(encrypted_char)
             key_index += 1
         else:
+            # Fix: Keep spaces and punctuation exactly as they are so Morse engine handles them
             ciphertext.append(char)
     return "".join(ciphertext)
 
@@ -46,6 +53,7 @@ def vigenere_decrypt(ciphertext, key):
             plaintext.append(dec_char)
             key_index += 1
         else:
+            # Fix: Preserve non-alpha characters during decryption path
             plaintext.append(char)
     return "".join(plaintext)
 
@@ -74,7 +82,6 @@ def decode(encoded_message):
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret_tactical_key_2026!'
-# Initialize SocketIO with cross-origin capabilities enabled
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route("/")
@@ -117,10 +124,7 @@ def handle_join_channel(data):
 def handle_transmit_signal(data):
     channel = data.get('channel', '101').strip()
     morse_payload = data.get('morse_payload', '')
-    
-    # Instantly broadcast the Morse packet to all active users on this frequency
     emit('incoming_signal', {'morse_payload': morse_payload}, room=channel, include_self=False)
 
 if __name__ == "__main__":
-    # Must use socketio.run instead of app.run to enable the WebSocket event loop
     socketio.run(app, host="127.0.0.1", port=5000, debug=True)

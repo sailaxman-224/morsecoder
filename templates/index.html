@@ -49,67 +49,65 @@
             </div>
         </div>
 
-        <form action="/" method="POST" style="margin: 0;">
-            <div class="control-header" style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 12px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <input type="hidden" name="mode" id="modeStatus" value="encode">
-                    <button type="button" id="swapBtn" class="btn-ui" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155;">⇆ Switch Modes</button>
-                    <button type="button" id="transmitBtn" class="btn-ui hidden" style="background-color: #ef4444; color: white; border: 1px solid #dc3545;">🛰️ Transmit Signal</button>
+        <div class="control-header" style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 12px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <input type="hidden" id="modeStatus" value="encode">
+                <button type="button" id="swapBtn" class="btn-ui" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155;">⇆ Switch Modes</button>
+                <button type="button" id="transmitBtn" class="btn-ui hidden" style="background-color: #ef4444; color: white; border: 1px solid #dc3545;">🛰️ Transmit Signal</button>
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <label for="secretKeyInput" style="font-size: 13px; font-weight: 600; color: #475569;">🔑 Secret Cipher Key:</label>
+                <input type="password" id="secretKeyInput" name="secret_key" placeholder="OPTIONAL PASSWORD" class="form-control-ui" style="text-transform: uppercase; width: 160px; font-weight: 600; letter-spacing: 0.5px;">
+            </div>
+        </div>
+
+        <div class="main-layout-wrapper">
+            
+            <div id="samplePhrasesContainer" class="samples-side-panel hidden" style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; padding: 15px; width: 200px; box-shadow: none;">
+                <h3 style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin-bottom: 8px;">💡 Snippet Samples</h3>
+                <select id="panelDropdown" class="form-control-ui" style="width: 100%; cursor: pointer; margin-bottom: 20px;">
+                    <option value="" selected disabled>-- Select Code --</option>
+                    <option value="..." data-morse="... --- ...">... --- ... (SOS)</option>
+                    <option value="...." data-morse=".... . .-.. .-.. ---">.... . .-.. .-.. --- (HELLO)</option>
+                    <option value="-" data-morse="- . ... - .. -. --. / .---- / ..--- / ...--">TESTING 1 2 3</option>
+                    <option value="-.-." data-morse="-.-. --- --- .-.. / .-- . -... / .- .--. .--.">COOL WEB APP</option>
+                </select>
+
+                <h3 style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin-bottom: 8px;">🌐 Target Language</h3>
+                <select id="targetLangDropdown" class="form-control-ui" style="width: 100%; cursor: pointer;">
+                    <option value="english" selected>English</option>
+                    <option value="hindi">Hindi (हिन्दी)</option>
+                    <option value="telugu">Telugu (తెలుగు)</option>
+                    <option value="spanish">Spanish (Español)</option>
+                    <option value="french">French (Français)</option>
+                    <option value="german">German (Deutsch)</option>
+                </select>
+            </div>
+
+            <div class="converter-container" style="gap: 20px;">
+                <div class="box-wrapper">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label id="inputLabel" for="user_input" style="font-size: 14px; font-weight: 700; color: #334155;">English Text Input:</label>
+                        <button type="button" id="micBtn" class="btn-ui" style="border: 1px solid #28a745; background: #ffffff; color: #28a745; padding: 2px 10px;">🎤 Speak</button>
+                    </div>
+                    <textarea id="user_input" placeholder="Type here..." style="border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; background-color: #f8fafc; color: #0f172a;"></textarea>
                 </div>
-                
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <label for="secretKeyInput" style="font-size: 13px; font-weight: 600; color: #475569;">🔑 Secret Cipher Key:</label>
-                    <input type="password" id="secretKeyInput" name="secret_key" placeholder="OPTIONAL PASSWORD" class="form-control-ui" style="text-transform: uppercase; width: 160px; font-weight: 600; letter-spacing: 0.5px;">
+
+                <div class="box-wrapper">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                        <label id="outputLabel" for="output_result" style="font-size: 14px; font-weight: 700; color: #334155;">Morse Code Output:</label>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div id="visualBeacon" style="width: 10px; height: 10px; border-radius: 50%; background-color: #cbd5e1; border: 2px solid #e2e8f0; transition: background-color 0.05s ease;"></div>
+                            <button type="button" id="copyBtn" class="btn-ui" style="border: 1px solid #cbd5e1; background: #ffffff; color: #475569; padding: 2px 10px;">📋 Copy</button>
+                            <button type="button" id="smartAudioBtn" class="btn-ui" style="border: 1px solid #007bff; background: #ffffff; color: #007bff; padding: 2px 10px;">🔊 Listen</button>
+                        </div>
+                    </div>
+                    <textarea id="output_result" readonly placeholder="Translation will appear here..." style="border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; background-color: #f8fafc; color: #0f172a; font-family: monospace; letter-spacing: 1px; font-weight: 600;"></textarea>
                 </div>
             </div>
 
-            <div class="main-layout-wrapper">
-                
-                <div id="samplePhrasesContainer" class="samples-side-panel hidden" style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; padding: 15px; width: 200px; box-shadow: none;">
-                    <h3 style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin-bottom: 8px;">💡 Snippet Samples</h3>
-                    <select id="panelDropdown" class="form-control-ui" style="width: 100%; cursor: pointer; margin-bottom: 20px;">
-                        <option value="" selected disabled>-- Select Code --</option>
-                        <option value="... --- ...">... --- ... (SOS)</option>
-                        <option value=".... . .-.. .-.. ---">.... . .-.. .-.. --- (HELLO)</option>
-                        <option value="- . ... - .. -. --. / .---- / ..--- / ...--">TESTING 1 2 3</option>
-                        <option value="-.-. --- --- .-.. / .-- . -... / .- .--. .--.">COOL WEB APP</option>
-                    </select>
-
-                    <h3 style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin-bottom: 8px;">🌐 Target Language</h3>
-                    <select name="target_lang" id="targetLangDropdown" class="form-control-ui" style="width: 100%; cursor: pointer;">
-                        <option value="english" selected>English</option>
-                        <option value="hindi">Hindi (हिन्दी)</option>
-                        <option value="telugu">Telugu (తెలుగు)</option>
-                        <option value="spanish">Spanish (Español)</option>
-                        <option value="french">French (Français)</option>
-                        <option value="german">German (Deutsch)</option>
-                    </select>
-                </div>
-
-                <div class="converter-container" style="gap: 20px;">
-                    <div class="box-wrapper">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <label id="inputLabel" for="user_input" style="font-size: 14px; font-weight: 700; color: #334155;">English Text Input:</label>
-                            <button type="button" id="micBtn" class="btn-ui" style="border: 1px solid #28a745; background: #ffffff; color: #28a745; padding: 2px 10px;">🎤 Speak</button>
-                        </div>
-                        <textarea name="user_input" id="user_input" placeholder="Type here..." style="border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; background-color: #f8fafc; color: #0f172a;"></textarea>
-                    </div>
-
-                    <div class="box-wrapper">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                            <label id="outputLabel" for="output_result" style="font-size: 14px; font-weight: 700; color: #334155;">Morse Code Output:</label>
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <div id="visualBeacon" style="width: 10px; height: 10px; border-radius: 50%; background-color: #cbd5e1; border: 2px solid #e2e8f0; transition: background-color 0.05s ease;"></div>
-                                <button type="button" id="copyBtn" class="btn-ui" style="border: 1px solid #cbd5e1; background: #ffffff; color: #475569; padding: 2px 10px;">📋 Copy</button>
-                                <button type="button" id="smartAudioBtn" class="btn-ui" style="border: 1px solid #007bff; background: #ffffff; color: #007bff; padding: 2px 10px;">🔊 Listen</button>
-                            </div>
-                        </div>
-                        <textarea id="output_result" readonly placeholder="Translation will appear here..." style="border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; background-color: #f8fafc; color: #0f172a; font-family: monospace; letter-spacing: 1px; font-weight: 600;"></textarea>
-                    </div>
-                </div>
-
-            </div>
-        </form>
+        </div>
 
         <div class="history-section-wrapper" style="box-shadow: none; border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 30px; padding: 15px;">
             <div class="history-header" style="border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 12px;">

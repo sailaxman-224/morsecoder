@@ -43,8 +43,8 @@ if (connectNetBtn) {
             return;
         }
 
-        // Establish real-time connection to the local backend WebSocket service
-        socket = io("http://127.0.0.1:5000");
+        // Establish dynamic connection to the active environment host
+        socket = io();
 
         socket.on('connect', () => {
             netStatus.innerHTML = 'Connected';
@@ -186,7 +186,8 @@ if (document.getElementById('secretKeyInput')) document.getElementById('secretKe
 // =========================================================================
 if (panelDropdown) {
     panelDropdown.addEventListener('change', () => {
-        const selectedMorse = panelDropdown.value;
+        const selectedOption = panelDropdown.options[panelDropdown.selectedIndex];
+        const selectedMorse = selectedOption.getAttribute('data-morse');
         if (selectedMorse) {
             userInput.value = selectedMorse;
             userInput.dispatchEvent(new Event('input'));
@@ -243,6 +244,7 @@ function saveToLocalStorage(input, output, mode, lang) {
     renderHistory();
 }
 
+// Check for user gamemode references inside local system arrays
 function renderHistory() {
     let history = JSON.parse(localStorage.getItem('morse_history')) || [];
     if (history.length === 0) {
