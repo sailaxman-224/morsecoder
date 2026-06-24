@@ -1,92 +1,46 @@
-body {
+body.app-body {
     font-family: Arial, sans-serif;
-    background-color: #f4f7f6;
-    padding: 40px;
-    text-align: center;
+    background-color: #f1f5f9;
+    padding: 30px 15px;
     margin: 0;
+    text-align: center;
 }
 
-.converter-container {
-    flex-grow: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    max-width: 800px;
-}
-
-.box-wrapper {
-    text-align: left;
-}
-
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 12px;
-    box-sizing: border-box;
-    border: 2px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-    resize: none;
-}
-
-#swapBtn {
-    padding: 10px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    border-radius: 4px;
-    border: 1px solid #007bff;
-    background-color: white;
-    color: #007bff;
-}
-
-/* Utility class to cleanly hide elements */
-.hidden {
-    display: none !important;
-}
-
-/* Container to hold both the samples panel and the translation grid side-by-side */
-.main-layout-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    max-width: 1000px;
+.main-card-wrapper {
+    max-width: 1050px;
     margin: 0 auto;
-    gap: 20px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
 }
 
-/* Compact side panel for your Morse snippets */
-.samples-side-panel {
-    background-color: white;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    padding: 15px;
-    width: 200px;
-    box-shadow: none;
-    text-align: left;
-    box-sizing: border-box;
+/* Responsive Managed Header Bar Elements */
+.app-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f1f5f9;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
 }
 
-.samples-side-panel h3 {
-    margin-top: 0;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #64748b;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 8px;
-}
-
-/* Container to keep the tiny toggle button and h1 title aligned on the same horizontal line */
 .title-container {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
-    margin-bottom: 25px;
 }
 
-/* Tiny, subtle swap button for the title */
+#mainTitle {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    color: #1e293b;
+    font-family: monospace;
+}
+
 #titleSwapBtn {
     background: none;
     border: 1px solid #ccc;
@@ -95,77 +49,209 @@ textarea {
     padding: 2px 6px;
     font-size: 10px;
     cursor: pointer;
-    transition: all 0.2s ease;
 }
 
-#titleSwapBtn:hover {
-    background-color: #e2e6ea;
-    border-color: #007bff;
-    color: #007bff;
+.network-status-badge {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #0f172a;
+    color: #94a3b8;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-family: monospace;
 }
 
-/* Base style adjustment for the title itself */
-#mainTitle {
-    margin: 0;
-    font-size: 28px;
-    letter-spacing: 2px;
+.network-status-badge input {
+    background: #1e293b;
+    border: 1px solid #475569;
+    color: #f8fafc;
+    padding: 2px 4px;
+    width: 40px;
+    text-align: center;
+    border-radius: 4px;
+    font-weight: bold;
 }
 
-/* History Component Layout */
-.history-section-wrapper {
-    max-width: 1000px;
-    margin: 40px auto 20px auto;
-    background: white;
+.network-status-badge button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.badge-divider {
+    height: 12px;
+    width: 1px;
+    background: #334155;
+}
+
+/* Control Header Console Grid Row */
+.control-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8fafc;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 20px;
+}
+
+.action-left-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.cipher-right-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cipher-right-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.cipher-right-group input {
+    text-transform: uppercase;
+    width: 160px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Layout Framework Core Grids */
+.main-layout-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.samples-side-panel {
     border: 1px solid #e2e8f0;
     border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    background: #ffffff;
+    padding: 15px;
+    width: 200px;
+    box-shadow: none;
+    text-align: left;
+    box-sizing: border-box;
+}
+
+.samples-side-panel h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #64748b;
+    margin-bottom: 8px;
+    margin-top: 0;
+}
+
+.converter-container {
+    flex-grow: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.box-wrapper {
+    text-align: left;
+}
+
+.textbox-label-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.textbox-label-bar label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #334155;
+}
+
+textarea {
+    width: 100%;
+    height: 150px;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+    background-color: #f8fafc;
+    color: #0f172a;
+    resize: none;
+}
+
+#output_result {
+    font-family: monospace;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+#visualBeacon {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #cbd5e1;
+    border: 2px solid #e2e8f0;
+    transition: background-color 0.05s ease;
+}
+
+/* History Segment Controls */
+.history-section-wrapper {
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-top: 30px;
+    padding: 15px;
+    text-align: left;
 }
 
 .history-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #edf2f7;
-    padding-bottom: 10px;
-    margin-bottom: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
 }
 
 .history-header h2 {
-    font-size: 18px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #334155;
     margin: 0;
-    color: #2d3748;
 }
 
 .clear-btn {
     background: none;
     border: 1px solid #e5e7eb;
     color: #4b5563;
-    padding: 5px 12px;
+    padding: 3px 10px;
+    font-size: 12px;
     border-radius: 4px;
-    font-size: 13px;
     cursor: pointer;
-    transition: all 0.2s;
 }
 
-.clear-btn:hover {
-    background: #fee2e2;
-    border-color: #fca5a5;
-    color: #dc3545;
-}
-
-/* Individual Card Styling */
 .history-card {
     background: #f8fafc;
-    border-left: 4px solid #007bff;
-    padding: 12px 15px;
-    margin-bottom: 10px;
+    border-left: 4px solid #3b82f6;
+    padding: 10px 15px;
+    margin-bottom: 8px;
     border-radius: 0 6px 6px 0;
     display: grid;
     grid-template-columns: 1fr 1fr auto;
     gap: 15px;
     align-items: center;
-    animation: fadeIn 0.3s ease-in-out;
 }
 
 .history-card .data-block strong {
@@ -173,14 +259,11 @@ textarea {
     font-size: 11px;
     color: #64748b;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 2px;
 }
 
 .history-card .data-block span {
-    font-size: 14px;
+    font-size: 13px;
     color: #334155;
-    word-break: break-all;
 }
 
 .history-tag {
@@ -195,60 +278,149 @@ textarea {
 .empty-log-msg {
     text-align: center;
     color: #94a3b8;
-    font-size: 14px;
-    padding: 20px 0;
+    font-size: 13px;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Dictionary Placements */
+.dictionary-trigger-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.dict-action-btn {
+    background: #ffffff;
+    border: 1px solid #3b82f6 !important;
+    color: #3b82f6 !important;
+}
+
+.dict-action-btn:hover {
+    background: #f0f6ff;
+}
+
+/* Overlay Window Modal Structure Engine */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-card {
+    background: white;
+    width: 90%;
+    max-width: 750px;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #1e293b;
+}
+
+.close-modal-x {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #94a3b8;
+    cursor: pointer;
+}
+
+.close-modal-x:hover {
+    color: #ef4444;
+}
+
+.modal-body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.dict-column h4 {
+    margin-top: 0;
+    font-size: 13px;
+    color: #3b82f6;
+    border-bottom: 2px solid #eff6ff;
+    padding-bottom: 4px;
+}
+
+.dict-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 13px;
+    border-bottom: 1px dashed #f1f5f9;
+    font-family: monospace;
+}
+
+.dict-row span {
+    color: #475569;
+}
+
+.dict-row strong {
+    color: #0f172a;
+    letter-spacing: 0.5px;
+}
+
+.hidden {
+    display: none !important;
 }
 
 /* =========================================================================
-   MOBILE RESPONSIVE ADAPTATION LAYER
+   CRITICAL UN-CLUMSY MOBILE RESPONSIVE RESET LAYER
    ========================================================================= */
 @media screen and (max-width: 768px) {
-    body {
-        padding: 15px 10px !important;
+    body.app-body {
+        padding: 15px 10px;
     }
 
-    /* Stack the sidebar and the core layout vertically */
-    .main-layout-wrapper {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 15px;
-    }
-
-    /* Stretch the side drawer snippet elements to fill full width */
-    .samples-side-panel {
-        width: 100% !important;
-        box-sizing: border-box;
-    }
-
-    /* Collapse the split grid from 2 columns into 1 vertical column */
-    .converter-container {
-        grid-template-columns: 1fr !important;
-        gap: 15px;
-    }
-
-    /* Force text boxes to be slightly shorter so the user doesn't have to scroll forever */
-    textarea {
-        height: 120px;
-    }
-
-    /* Clean up the network control bars to stack cleanly on mobile rows */
-    .control-header {
-        flex-direction: column;
+    .app-header-bar, .control-header, .main-layout-wrapper {
+        flex-direction: column !important;
         align-items: stretch !important;
-        gap: 12px;
+        gap: 15px !important;
     }
 
-    .control-header div {
+    .cipher-right-group {
         justify-content: space-between;
         width: 100%;
     }
 
-    .title-container h1 {
-        font-size: 20px !important;
+    .cipher-right-group input {
+        width: 50%;
+    }
+
+    .samples-side-panel {
+        width: 100%;
+    }
+
+    .converter-container, .history-card, .modal-body-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    textarea {
+        height: 120px;
     }
 }

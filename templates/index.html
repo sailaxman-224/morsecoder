@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
     <style>
-        /* Custom layout alignments injected to complement the style sheets */
         .btn-ui {
             padding: 6px 14px;
             font-size: 13px;
@@ -28,44 +27,44 @@
         }
     </style>
 </head>
-<body style="background-color: #f1f5f9; padding: 30px 15px;">
+<body class="app-body">
 
-    <div style="max-width: 1050px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);">
+    <div class="main-card-wrapper">
         
-        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 20px;">
-            <div class="title-container" style="margin-bottom: 0;">
+        <div class="app-header-bar">
+            <div class="title-container">
                 <button type="button" id="titleSwapBtn" title="Toggle Title Language">⇆</button>
-                <h1 id="mainTitle" style="font-size: 24px; font-weight: 800; color: #1e293b; font-family: monospace;">-- --- .-. ... . -.-. --- -.. . .-.</h1>
+                <h1 id="mainTitle">-- --- .-. ... . -.-. --- -.. . .-.</h1>
             </div>
             
-            <div style="display: flex; align-items: center; gap: 15px; background: #0f172a; color: #94a3b8; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-family: monospace;">
+            <div class="network-status-badge">
                 <div>📡 Net: <span id="netStatus" style="color: #ef4444; font-weight: bold;">Offline</span></div>
-                <div style="height: 12px; width: 1px; background: #334155;"></div>
+                <div class="badge-divider"></div>
                 <div style="display: flex; align-items: center; gap: 6px;">
                     <span>CH:</span>
-                    <input type="text" id="channelInput" value="101" style="background: #1e293b; border: 1px solid #475569; color: #f8fafc; padding: 2px 4px; width: 40px; text-align: center; border-radius: 4px; font-weight: bold;">
-                    <button type="button" id="connectNetBtn" class="btn-ui" style="background: #3b82f6; color: white; border: none; padding: 2px 8px; border-radius: 4px; font-family: monospace;">Connect</button>
+                    <input type="text" id="channelInput" value="101">
+                    <button type="button" id="connectNetBtn" class="btn-ui">Connect</button>
                 </div>
             </div>
         </div>
 
-        <div class="control-header" style="display: flex; align-items: center; justify-content: space-between; background: #f8fafc; padding: 12px 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px;">
-            <div style="display: flex; gap: 10px; align-items: center;">
+        <div class="control-header">
+            <div class="action-left-group">
                 <input type="hidden" id="modeStatus" value="encode">
-                <button type="button" id="swapBtn" class="btn-ui" style="background: #ffffff; border: 1px solid #cbd5e1; color: #334155;">⇆ Switch Modes</button>
-                <button type="button" id="transmitBtn" class="btn-ui hidden" style="background-color: #ef4444; color: white; border: 1px solid #dc3545;">🛰️ Transmit Signal</button>
+                <button type="button" id="swapBtn" class="btn-ui">⇆ Switch Modes</button>
+                <button type="button" id="transmitBtn" class="btn-ui hidden">🛰️ Transmit Signal</button>
             </div>
             
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <label for="secretKeyInput" style="font-size: 13px; font-weight: 600; color: #475569;">🔑 Secret Cipher Key:</label>
-                <input type="password" id="secretKeyInput" name="secret_key" placeholder="OPTIONAL PASSWORD" class="form-control-ui" style="text-transform: uppercase; width: 160px; font-weight: 600; letter-spacing: 0.5px;">
+            <div class="cipher-right-group">
+                <label for="secretKeyInput">🔑 Secret Cipher Key:</label>
+                <input type="password" id="secretKeyInput" name="secret_key" placeholder="OPTIONAL PASSWORD" class="form-control-ui">
             </div>
         </div>
 
         <div class="main-layout-wrapper">
             
-            <div id="samplePhrasesContainer" class="samples-side-panel hidden" style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; padding: 15px; width: 200px; box-shadow: none;">
-                <h3 style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin-bottom: 8px;">💡 Snippet Samples</h3>
+            <div id="samplePhrasesContainer" class="samples-side-panel hidden">
+                <h3>💡 Snippet Samples</h3>
                 <select id="panelDropdown" class="form-control-ui" style="width: 100%; cursor: pointer; margin-bottom: 20px;">
                     <option value="" selected disabled>-- Select Code --</option>
                     <option value="..." data-morse="... --- ...">... --- ... (SOS)</option>
@@ -74,7 +73,7 @@
                     <option value="-.-." data-morse="-.-. --- --- .-.. / .-- . -... / .- .--. .--.">COOL WEB APP</option>
                 </select>
 
-                <h3 style="font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; margin-bottom: 8px;">🌐 Target Language</h3>
+                <h3>🌐 Target Language</h3>
                 <select id="targetLangDropdown" class="form-control-ui" style="width: 100%; cursor: pointer;">
                     <option value="english" selected>English</option>
                     <option value="hindi">Hindi (हिन्दी)</option>
@@ -85,40 +84,101 @@
                 </select>
             </div>
 
-            <div class="converter-container" style="gap: 20px;">
+            <div class="converter-container">
                 <div class="box-wrapper">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <label id="inputLabel" for="user_input" style="font-size: 14px; font-weight: 700; color: #334155;">English Text Input:</label>
-                        <button type="button" id="micBtn" class="btn-ui" style="border: 1px solid #28a745; background: #ffffff; color: #28a745; padding: 2px 10px;">🎤 Speak</button>
+                    <div class="textbox-label-bar">
+                        <label id="inputLabel" for="user_input">English Text Input:</label>
+                        <button type="button" id="micBtn" class="btn-ui">🎤 Speak</button>
                     </div>
-                    <textarea id="user_input" placeholder="Type here..." style="border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; background-color: #f8fafc; color: #0f172a;"></textarea>
+                    <textarea id="user_input" placeholder="Type here..."></textarea>
                 </div>
 
                 <div class="box-wrapper">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <label id="outputLabel" for="output_result" style="font-size: 14px; font-weight: 700; color: #334155;">Morse Code Output:</label>
+                    <div class="textbox-label-bar">
+                        <label id="outputLabel" for="output_result">Morse Code Output:</label>
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            <div id="visualBeacon" style="width: 10px; height: 10px; border-radius: 50%; background-color: #cbd5e1; border: 2px solid #e2e8f0; transition: background-color 0.05s ease;"></div>
-                            <button type="button" id="copyBtn" class="btn-ui" style="border: 1px solid #cbd5e1; background: #ffffff; color: #475569; padding: 2px 10px;">📋 Copy</button>
-                            <button type="button" id="smartAudioBtn" class="btn-ui" style="border: 1px solid #007bff; background: #ffffff; color: #007bff; padding: 2px 10px;">🔊 Listen</button>
+                            <div id="visualBeacon"></div>
+                            <button type="button" id="copyBtn" class="btn-ui">📋 Copy</button>
+                            <button type="button" id="smartAudioBtn" class="btn-ui">🔊 Listen</button>
                         </div>
                     </div>
-                    <textarea id="output_result" readonly placeholder="Translation will appear here..." style="border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; background-color: #f8fafc; color: #0f172a; font-family: monospace; letter-spacing: 1px; font-weight: 600;"></textarea>
+                    <textarea id="output_result" readonly placeholder="Translation will appear here..."></textarea>
                 </div>
             </div>
 
         </div>
 
-        <div class="history-section-wrapper" style="box-shadow: none; border: 1px solid #e2e8f0; border-radius: 8px; margin-top: 30px; padding: 15px;">
-            <div class="history-header" style="border-bottom: 1px solid #f1f5f9; padding-bottom: 8px; margin-bottom: 12px;">
-                <h2 style="font-size: 15px; font-weight: 700; color: #334155;">📜 Local Translation History Log</h2>   
-                <button type="button" id="clearHistoryBtn" class="clear-btn" style="padding: 3px 10px; font-size: 12px;">🗑️ Clear Logs</button>
+        <div class="history-section-wrapper">
+            <div class="history-header">
+                <h2>📜 Local Translation History Log</h2>   
+                <button type="button" id="clearHistoryBtn" class="clear-btn">🗑️ Clear Logs</button>
             </div>
             <div id="historyLogContainer" class="history-log-container">
                 <p class="empty-log-msg">No recent translations logged on this device.</p>
             </div>
         </div>
 
+        <div class="dictionary-trigger-container">
+            <button type="button" id="openDictBtn" class="btn-ui dict-action-btn">📖 View Morse Code Dictionary</button>
+        </div>
+
+    </div>
+
+    <div id="dictModal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>📋 International Morse Code Dictionary</h3>
+                <button type="button" id="closeDictBtn" class="close-modal-x">&times;</button>
+            </div>
+            <div class="modal-body-grid">
+                <div class="dict-column">
+                    <h4>Letters (A - M)</h4>
+                    <div class="dict-row"><span>A</span><strong>.-</strong></div>
+                    <div class="dict-row"><span>B</span><strong>-...</strong></div>
+                    <div class="dict-row"><span>C</span><strong>-.-.</strong></div>
+                    <div class="dict-row"><span>D</span><strong>-..</strong></div>
+                    <div class="dict-row"><span>E</span><strong>.</strong></div>
+                    <div class="dict-row"><span>F</span><strong>..-.</strong></div>
+                    <div class="dict-row"><span>G</span><strong>--.</strong></div>
+                    <div class="dict-row"><span>H</span><strong>....</strong></div>
+                    <div class="dict-row"><span>I</span><strong>..</strong></div>
+                    <div class="dict-row"><span>J</span><strong>.---</strong></div>
+                    <div class="dict-row"><span>K</span><strong>-.-</strong></div>
+                    <div class="dict-row"><span>L</span><strong>.-..</strong></div>
+                    <div class="dict-row"><span>M</span><strong>--</strong></div>
+                </div>
+                <div class="dict-column">
+                    <h4>Letters (N - Z)</h4>
+                    <div class="dict-row"><span>N</span><strong>-.</strong></div>
+                    <div class="dict-row"><span>O</span><strong>---</strong></div>
+                    <div class="dict-row"><span>P</span><strong>.--.</strong></div>
+                    <div class="dict-row"><span>Q</span><strong>--.-</strong></div>
+                    <div class="dict-row"><span>R</span><strong>.-.</strong></div>
+                    <div class="dict-row"><span>S</span><strong>...</strong></div>
+                    <div class="dict-row"><span>T</span><strong>-</strong></div>
+                    <div class="dict-row"><span>U</span><strong>..-</strong></div>
+                    <div class="dict-row"><span>V</span><strong>...-</strong></div>
+                    <div class="dict-row"><span>W</span><strong>.--</strong></div>
+                    <div class="dict-row"><span>X</span><strong>-..-</strong></div>
+                    <div class="dict-row"><span>Y</span><strong>-.--</strong></div>
+                    <div class="dict-row"><span>Z</span><strong>--..</strong></div>
+                </div>
+                <div class="dict-column">
+                    <h4>Numbers & Ops</h4>
+                    <div class="dict-row"><span>1</span><strong>.----</strong></div>
+                    <div class="dict-row"><span>2</span><strong>..---</strong></div>
+                    <div class="dict-row"><span>3</span><strong>...--</strong></div>
+                    <div class="dict-row"><span>4</span><strong>....-</strong></div>
+                    <div class="dict-row"><span>5</span><strong>.....</strong></div>
+                    <div class="dict-row"><span>6</span><strong>-....</strong></div>
+                    <div class="dict-row"><span>7</span><strong>--...</strong></div>
+                    <div class="dict-row"><span>8</span><strong>---..</strong></div>
+                    <div class="dict-row"><span>9</span><strong>----.</strong></div>
+                    <div class="dict-row"><span>0</span><strong>-----</strong></div>
+                    <div class="dict-row"><span>[Space]</span><strong>/</strong></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="{{ url_for('static', filename='script.js') }}"></script>
